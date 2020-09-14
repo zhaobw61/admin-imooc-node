@@ -19,11 +19,11 @@ function querySql(sql){
     return new Promise((resolve, reject)=>{
         try {
             conn.query(sql, (err, results) => {
-                debug && console.log("查询失败，原因：" + JSON.stringify(err));
                 if (err) {
+                    debug && console.log("查询失败，原因：" + JSON.stringify(err));
                     reject(err);
                 } else {
-                    debug && console.log("查询失败，原因：" + JSON.stringify(results));
+                    debug && console.log("查询成功，原因：" + JSON.stringify(results));
                     resolve(results);
                 }
             })
