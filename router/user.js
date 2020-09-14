@@ -1,20 +1,18 @@
 const express = require('express');
 const Result = require('../models/Result');
-const { querySql } = require('../db/config');
+const { login } = require('../services/user');
 const router = express.Router();
 
 router.post('/login', function(req, res){
-    console.log(req.body);
     let { username, password } = req.body;
-    querySql('select * from admin_user').then(results => {
-        console.log('results');
-        console.log(results);
-    });
-    if(username === 'admin' && password === '111111') {
-        new Result('登录成功').success(res);
-    } else {
-        new Result('登录失败').fail(res);
-    }
+
+    login(username, password).then(user=>{
+        if(!user || user.length === 0) {
+            new Result('登录失败').fail(res);
+        } else {
+            new Result('登录成功').success(res);
+        }
+    })
 });
 
 router.get('/info', function(req, res, next){
