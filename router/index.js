@@ -1,9 +1,6 @@
 const express = require('express');
 const boom = require('boom');
 const userRouter = require('./user');
-const {
-    CODE_ERROR
-} = require('../utils/constant');
 const jwtAuth = require('./jwt');
 const Result = require('../models/Result');
 

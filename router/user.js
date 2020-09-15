@@ -1,7 +1,7 @@
 const express = require('express');
 const Result = require('../models/Result');
-const { login } = require('../services/user');
-const { md5 } = require('../utils/index');
+const { login, findeUser } = require('../services/user');
+const { md5, decode } = require('../utils/index');
 const { PWD_SALT } = require('../utils/constant');
 const { body, validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
@@ -38,8 +38,20 @@ router.post(
         }
 });
 
-router.get('/info', function(req, res, next){
-    res.json('user info...');
+router.get('/info', function(req, res){
+    const decoded  = decode(req);
+    if(decoded  && decoded .username) {
+        findeUser(decoded .username).then(user => {
+            if(user) {
+                user.roles = [user.role];
+                new Result(user, '用户信息查询成功').success(res);
+            } else {
+                new Result('用户信息查询失败').fail(res);
+            }
+        })
+    } else {
+        new Result('用户信息查询失败').fail(res);
+    }
 });
 
 module.exports = router;
