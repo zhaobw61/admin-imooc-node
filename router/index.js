@@ -4,10 +4,15 @@ const userRouter = require('./user');
 const {
     CODE_ERROR
 } = require('../utils/constant');
+const jwtAuth = require('./jwt');
+const Result = require('../models/Result');
 
 // 注册路由
 
 const router = express.Router();
+
+// 对所有路由进行 jwt 认证
+router.use(jwtAuth)
 
 router.get('/', function(req, res){
     res.send('welcome to JJ book');
