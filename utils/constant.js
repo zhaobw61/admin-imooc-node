@@ -1,5 +1,5 @@
 const { env } = require('./env');
-const UPLOAD_PATH = env === 'dev' ? '/Users/sam/upload/admin-upload-ebook' : '/root/upload/admin-upload/ebook';
+const UPLOAD_PATH = env === 'dev' ? '/my-users/upload/admin-upload-ebook' : '/root/upload/admin-upload/ebook';
 
 module.exports = {
     CODE_ERROR: -1,
