@@ -1,6 +1,7 @@
 const express = require('express');
 const boom = require('boom');
 const userRouter = require('./user');
+const bookRouter = require('./book');
 const jwtAuth = require('./jwt');
 const Result = require('../models/Result');
 
@@ -16,6 +17,8 @@ router.get('/', function(req, res){
 })
 
 router.use('/user', userRouter);
+
+router.use('/book', bookRouter);
 
 router.use((req, res, next)=>{
     next(boom.notFound('接口不存在'));
