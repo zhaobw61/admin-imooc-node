@@ -42,7 +42,7 @@ class Result {
     }
 
     json(res) {
-        res.json(this.createResult())
+        res.json(this.createResult());
     }
 
     success(res) {
@@ -55,7 +55,7 @@ class Result {
         this.json(res)
     }
 
-    jwtError() {
+    jwtError(res) {
         this.code = CODE_TOKEN_EXPIRED
         this.json(res)
     }
