@@ -104,25 +104,27 @@ class Book {
                         this.author = creator || creatorFileAs || 'unkonwn';
                         this.publisher = publisher || 'unkonwn';
                         this.rootFile = epub.rootFile;
+                        const handleGetImage = (err, file, mimeType) => {
+                            if (err) {
+                                reject(err);
+                            } else {
+                                const suffix = mimeType.split('/')[1];
+                                const coverPath = `${UPLOAD_PATH}/img/${this.fileName}.${suffix}`;
+                                const coverUrl = `${UPLOAD_URL}/img/${this.fileName}.${suffix}`;
+                                fs.writeFileSync(coverPath, file, 'binary');
+                                this.coverPath = `/img/${this.fileName}.${suffix}`;
+                                this.cover = coverUrl;
+                                resolve(this);
+                            }
+                        };
                         try {
                             this.unzip(epub);
-                            this.parseContents(epub);
-                            const handleGetImage = (err, file, mimeType) => {
-                                if (err) {
-                                    reject(err)
-                                } else {
-                                    const suffix = mimeType.split('/')[1]
-                                    const coverPath = `${UPLOAD_PATH}/img/${this.fileName}.${suffix}`
-                                    const coverUrl = `${UPLOAD_URL}/img/${this.fileName}.${suffix}`
-                                    fs.writeFileSync(coverPath, file, 'binary')
-                                    this.coverPath = `/img/${this.fileName}.${suffix}`
-                                    this.cover = coverUrl
-                                    resolve(this)
-                                }
-                            };
-                            epub.getImage(cover, handleGetImage);
+                            this.parseContents(epub).then(({ chapters }) => {
+                                this.contents = chapters;
+                                epub.getImage(cover, handleGetImage);
+                            });
                         } catch (e) {
-
+                            reject(e);
                         }
                     }
                 }
@@ -150,14 +152,27 @@ class Book {
             }
         }
 
-        function findParent(array) {
+        function findParent(array, level = 0, pid = '') {
             return array.map(item => {
+                item.level = level;
+                item.pid = pid;
+                if(item.navPoint && item.navPoint.length > 0) {
+                    item.navPoint = findParent(item.navPoint, level + 1, item['$'].id);
+                } else if (item.navPoint) {
+                    item.navPoint.level = level + 1;
+                    item.navPoint.pid = item['$'].id;
+                }
                 return item;
             });
         }
 
         function flatten(array) {
             return [].concat(...array.map(item => {
+                if(item.navPoint && item.navPoint.length > 0) {
+                    return [].concat(item, ...flatten(item.navPoint));
+                } else if(item.navPoint) {
+                    return [].concat(item, item.navPoint);
+                }
                 return item;
             }))
         }
@@ -190,12 +205,15 @@ class Book {
                                 } else {
                                     chapter.label = '';
                                 }
+                                chapter.level = nav.level;
+                                chapter.pid = nav.pid;
                                 chapter.navId = nav['$'].id;
                                 chapter.fileName = fileName;
                                 chapter.order = index + 1;
                                 chapters.push(chapter);
                             });
                             console.log(chapters);
+                            reslove({ chapters });
                         } else {
                             reject(new Error('目录解析失败，目录数为0'));
                         }
