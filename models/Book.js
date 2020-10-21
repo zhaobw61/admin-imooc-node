@@ -23,7 +23,7 @@ class Book {
             filename,
             mimetype = MEME_TYPE_EPUB,
             path,
-            originalName
+            originalname
         } = file;
         // 电子书的后缀名
         const suffix = mimetype === MEME_TYPE_EPUB ? '.epub' : '';
@@ -64,7 +64,7 @@ class Book {
         this.categoryText = '';
         this.language = ''; // 语种
         this.unzipUrl = unzipUrl;
-        this.originalName = originalName; // 原文件的原名
+        this.originalName = originalname; // 原文件的原名
     }
 
     createBookFromData(data) {
@@ -212,7 +212,7 @@ class Book {
                                 chapter.order = index + 1;
                                 chapters.push(chapter);
                             });
-                            console.log(chapters);
+                            // console.log(chapters);
                             reslove({ chapters });
                         } else {
                             reject(new Error('目录解析失败，目录数为0'));

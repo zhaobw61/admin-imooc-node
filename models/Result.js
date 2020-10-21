@@ -37,7 +37,7 @@ class Result {
                 ...this.options
             }
         }
-        console.log(base)
+        // console.log(base)
         return base
     }
 
