@@ -119,8 +119,9 @@ class Book {
                         };
                         try {
                             this.unzip(epub);
-                            this.parseContents(epub).then(({ chapters }) => {
+                            this.parseContents(epub).then(({ chapters, chapterTree }) => {
                                 this.contents = chapters;
+                                this.contentsTree = chapterTree;
                                 epub.getImage(cover, handleGetImage);
                             });
                         } catch (e) {
@@ -212,8 +213,18 @@ class Book {
                                 chapter.order = index + 1;
                                 chapters.push(chapter);
                             });
-                            // console.log(chapters);
-                            reslove({ chapters });
+                            const chapterTree = [];
+                            console.log("chapters =============================>", chapters);
+                            chapters.forEach(c => {
+                                c.children = [];
+                                if(c.pid) {
+                                    chapterTree.push(c);
+                                } else {
+                                    const parent = chapters.find ( _ => _.navId === c.pid);
+                                    parent && parent.children.push(c);
+                                }
+                            })
+                            reslove({ chapters, chapterTree });
                         } else {
                             reject(new Error('目录解析失败，目录数为0'));
                         }
