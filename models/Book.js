@@ -5,6 +5,7 @@ const {
 } = require('../utils/constant');
 
 const fs = require('fs');
+const path = require('path');
 const Epub = require('../utils/epub');
 const xml2js = require('xml2js').parseString;
 
@@ -182,6 +183,7 @@ class Book {
         if(fs.existsSync(ncxFilePath)) {
             return new Promise((reslove, reject)=>{
                 const xml = fs.readFileSync(ncxFilePath, 'utf-8');
+                const dir = path.dirname(ncxFilePath).replace(UPLOAD_PATH);
                 const fileName = this.fileName;
                 xml2js(xml, {
                     explicitArray: false,
@@ -195,26 +197,16 @@ class Book {
                             navMap.navPoint = findParent(navMap.navPoint);
                             const newNavMap = flatten(navMap.navPoint);
                             const chapters = [];
-                            epub.flow.forEach((chapter, index) => {
-                                if(index + 1 > newNavMap.length) {
-                                    return;
-                                }
-                                const nav = newNavMap[index];
-                                chapter.text = `${UPLOAD_URL}/unzip/${fileName}/${chapter.href}`;
-                                if(nav && nav.navLabel) {
-                                    chapter.label = nav.navLabel.text || '';
-                                } else {
-                                    chapter.label = '';
-                                }
-                                chapter.level = nav.level;
-                                chapter.pid = nav.pid;
-                                chapter.navId = nav['$'].id;
+                            newNavMap.forEach((chapter, index) => {
+                                const src = chapter.content['$'].src;
+                                chapter.text = `${UPLOAD_URL}${dir}/${src}`;
+                                chapter.label = chapter.navLabel.text || '';
+                                chapter.navId = chapter['$'].id;
                                 chapter.fileName = fileName;
                                 chapter.order = index + 1;
                                 chapters.push(chapter);
                             });
                             const chapterTree = [];
-                            console.log("chapters =============================>", chapters);
                             chapters.forEach(c => {
                                 c.children = [];
                                 if(c.pid) {
