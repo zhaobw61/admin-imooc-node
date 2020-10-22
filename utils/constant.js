@@ -1,6 +1,6 @@
 const { env } = require('./env');
 const UPLOAD_PATH = env === 'dev' ? '/my-users/upload/admin-upload-ebook' : '/root/upload/admin-upload/ebook';
-const UPLOAD_URL = env === 'dev' ? 'https://book.youbaobao.xyz/admin-upload-ebook' : 'https://www.youbaobao.xyz/admin-upload-ebook';
+const UPLOAD_URL = env === 'dev' ? 'http://book.youbaobao.xyz/admin-upload-ebook' : 'http://www.youbaobao.xyz/admin-upload-ebook';
 module.exports = {
     CODE_ERROR: -1,
     CODE_SUCCESS: 0,
