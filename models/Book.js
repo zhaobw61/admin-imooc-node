@@ -69,7 +69,25 @@ class Book {
     }
 
     createBookFromData(data) {
-
+        this.fileName = data.filename; // 文件名
+        this.cover = data.cover;
+        this.title = data.title;
+        this.author = data.author;
+        this.publisher = data.publisher;
+        this.bookId = data.fileName;
+        this.language = data.language;
+        this.rootFile = data.rootFile;
+        this.originalName = data.originalName;
+        this.path = data.path || data.filePath;
+        this.filePath = data.path || data.filePath;
+        this.unzipPath = data.unzipPath;
+        this.coverPath = data.coverPath;
+        this.createUser = data.username;
+        this.createDt = new Date().getTime();
+        this.updateDt = new Date().getTime();
+        this.updateType = data.updateType === 0 ? data.updateType : 1;
+        this.category = data.category || 99;
+        this.categoryText = data.categoryText || '自定义';
     }
 
     parse() {

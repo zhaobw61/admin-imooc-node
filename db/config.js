@@ -1,6 +1,7 @@
 const mysql = require('mysql');
 const config = require('./index');
 const { debug } = require('../utils/constant');
+const { isObject } = require('../utils');
 
 function connect() {
     return mysql.createConnection({
@@ -13,7 +14,7 @@ function connect() {
     })
 }
 
-function querySql(sql){
+function querySql(sql) {
     const conn = connect();
     debug && console.log(sql);
     return new Promise((resolve, reject)=>{
@@ -35,7 +36,7 @@ function querySql(sql){
     })
 }
 
-function queryOne(sql){
+function queryOne(sql) {
     const conn = connect();
     debug && console.log(sql);
     return new Promise((resolve, reject)=>{
@@ -61,7 +62,25 @@ function queryOne(sql){
     })
 }
 
+function insert(model, tableName) {
+    return new Promise((resolve, reject) => {
+        if (!isObject(model)) {
+            reject(new Error('插入数据库失败，插入数据非对象'));
+        } else {
+            const keys = [];
+            const values = [];
+            Object.keys(model).forEach(key => {
+                if (model.hasOwmProperty(key)) {
+                    keys.push(`\`${key}\``);
+                    values.push(`'${model[key]}`);
+                }
+            });
+        }
+    })
+}
+
 module.exports = {
     querySql,
-    queryOne
+    queryOne,
+    insert
 }
