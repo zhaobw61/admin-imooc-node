@@ -38,7 +38,9 @@ router.post(
         const book  = new Book(null, req.body);
         bookService.insertBook(book).then(()=>{
             
-        });
+        }).catch(err => {
+            next(boom.badImplementation(err));
+        })
     }
 )
 

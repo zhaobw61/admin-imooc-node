@@ -22,7 +22,7 @@ function insertBook(book) {
                     await removeBook(book);
                     reject(new Error('电子书已存在'));
                 } else {
-                    await db.insert(book, 'book');
+                    await db.insert(book.toDb(), 'book');
                     await insertContents(book);
                     reslove();
                 }
