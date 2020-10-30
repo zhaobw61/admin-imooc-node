@@ -1,5 +1,5 @@
 const Book = require("../models/Book");
-const db =  require("../db");
+const db =  require("../db/config");
 
 function exit(book) {
 

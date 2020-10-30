@@ -70,33 +70,34 @@ function insert(model, tableName) {
             const keys = [];
             const values = [];
             Object.keys(model).forEach(key => {
-                if (model.hasOwmProperty(key)) {
+                if (model.hasOwnProperty(key)) {
                     keys.push(`\`${key}\``);
                     values.push(`'${model[key]}'`);
                 }
             });
-        }
-        if(keys.length > 0 && values.length > 0) {
-            let sql = `INSERT INFO \`${tableName}\`(`;
-            const keyString = keys.join(',');
-            const valuesString = values.join(',');
-            sql = `${sql}${keyString}) VALUES (${valuesString})`;
-            const conn = connect();
-            try {
-                conn.query(sql, (err, result) => {
-                    if(err) {
-                        reject(err);
-                    } else {
-                        resolve(resolve);
-                    }
-                })
-            } catch (e) {
-                reject(e);
-            } finally {
-                conn.end();
+            if(keys.length > 0 && values.length > 0) {
+                let sql = `INSERT INTO \`${tableName}\` (`;
+                const keyString = keys.join(',');
+                const valuesString = values.join(',');
+                sql = `${sql}${keyString}) VALUES (${valuesString})`;
+                console.log('sql', sql);
+                const conn = connect();
+                try {
+                    conn.query(sql, (err, result) => {
+                        if(err) {
+                            reject(err);
+                        } else {
+                            resolve(resolve);
+                        }
+                    })
+                } catch (e) {
+                    reject(e);
+                } finally {
+                    conn.end();
+                }
+            } else {
+                reject(new Error('插入数据库失败 对象不合法'));
             }
-        } else {
-            reject(new Error('插入数据库失败 对象不合法'));
         }
     });
 }

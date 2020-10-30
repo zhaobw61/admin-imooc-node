@@ -69,7 +69,8 @@ class Book {
     }
 
     createBookFromData(data) {
-        this.fileName = data.filename; // 文件名
+        console.log('---data---', data);
+        this.fileName = data.fileName; // 文件名
         this.cover = data.cover;
         this.title = data.title;
         this.author = data.author;
@@ -248,7 +249,7 @@ class Book {
 
     toDb() {
         return {
-            fileName: this.filename,
+            fileName: this.fileName,
             cover: this.cover,
             title: this.title,
             author: this.author,

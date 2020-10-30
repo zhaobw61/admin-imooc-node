@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken')
 const { PRIVATE_KEY } = require('./constant')
 
 function isObject(o) {
-  return Object.prototype.toString.call(o) === '[obejct Object]';
+  return Object.prototype.toString.call(o) === '[object Object]';
 }
 
 function md5(s) {

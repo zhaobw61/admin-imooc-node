@@ -4,7 +4,7 @@ const { UPLOAD_PATH } = require('../utils/constant');
 const Result = require('../models/Result');
 const Book = require('../models/Book');
 const boom = require('boom');
-const { decoded } = require('../utils');
+const { decode } = require('../utils');
 const bookService = require('../services/book');
 
 const router = express.Router();
@@ -31,13 +31,14 @@ router.post(
 router.post(
     '/create',
     function(req, res, next){
-        const decode = decoded(req);
-        if(decode && decode.username) {
-            req.body.username = decode.username;
+        console.log('-0-0-0-');
+        const decoded = decode(req);
+        if(decoded && decoded.username) {
+            req.body.username = decoded.username;
         }
         const book  = new Book(null, req.body);
         bookService.insertBook(book).then(()=>{
-            
+            new Result('添加电子书成功').success(res);
         }).catch(err => {
             next(boom.badImplementation(err));
         })
