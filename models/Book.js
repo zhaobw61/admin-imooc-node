@@ -277,6 +277,18 @@ class Book {
         return this.contents;
     }
 
+    reset() {
+        if (Book.pathExists(this.filePath)) {
+            fs.unlinkSync(Book.genPath(this.filePath));
+        }
+        if (Book.pathExists(this.coverPath)) {
+            fs.unlinkSync(Book.genPath(this.coverPath));
+        }
+        if (Book.pathExists(this.unzipPath)) {
+            fs.rmdirSync(Book.genPath(this.unzipPath), { recursive: true });
+        }
+    }
+
     static genPath(path) {
         if(!path.startsWith('/')) {
             path = `/${path}`;
@@ -284,6 +296,13 @@ class Book {
         return `${UPLOAD_PATH}${path}`;
     }
 
+    static pathExists(path) {
+        if (path.startsWith(UPLOAD_PATH)) {
+            return fs.existsSync(path);
+        } else {
+            return fs.existsSync(Book.genPath(path));
+        }
+    }
 }
 
 module.exports = Book;

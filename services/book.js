@@ -3,11 +3,21 @@ const db =  require("../db/config");
 const _ = require('lodash');
 
 function exit(book) {
-
+    const { title, author, publisher } = book;
+    const sql = `select * from book where title='${title}' and author = '${author}' and publisher='${publisher}'`;
+    return db.queryOne(sql);
 }
 
-function removeBook (book) {
-
+async function removeBook (book) {
+    if (book) {
+        book.reset();
+        if (book.fileName) {
+            const removeBookSql = `delete from book where fileName = '${book.fileName}'`;
+            const removeContentSql = `delete from contents where fileName = '${book.fileName}'`;
+            await db.querySql(removeBookSql);
+            await db.querySql(removeContentSql);
+        }
+    }
 }
 
 async function insertContents (book) {
