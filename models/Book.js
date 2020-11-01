@@ -69,7 +69,6 @@ class Book {
     }
 
     createBookFromData(data) {
-        console.log('---data---', data);
         this.fileName = data.fileName; // 文件名
         this.cover = data.cover;
         this.title = data.title;
@@ -89,6 +88,7 @@ class Book {
         this.updateType = data.updateType === 0 ? data.updateType : 1;
         this.category = data.category || 99;
         this.categoryText = data.categoryText || '自定义';
+        this.contents = data.contents || [];
     }
 
     parse() {
@@ -204,6 +204,7 @@ class Book {
                 const xml = fs.readFileSync(ncxFilePath, 'utf-8');
                 const dir = path.dirname(ncxFilePath).replace(UPLOAD_PATH);
                 const fileName = this.fileName;
+                const unzipPath = this. unzipPath;
                 xml2js(xml, {
                     explicitArray: false,
                     ignoreAttrs: false
@@ -218,6 +219,8 @@ class Book {
                             const chapters = [];
                             newNavMap.forEach((chapter, index) => {
                                 const src = chapter.content['$'].src;
+                                chapter.id = `${src}`;
+                                chapter.href = `${dir}/${src}`.replace(unzipPath, ''); 
                                 chapter.text = `${UPLOAD_URL}${dir}/${src}`;
                                 chapter.label = chapter.navLabel.text || '';
                                 chapter.navId = chapter['$'].id;
@@ -268,6 +271,10 @@ class Book {
             category: this.category,
             categoryText: this.categoryText
         }
+    }
+
+    getContents() {
+        return this.contents;
     }
 
     static genPath(path) {
