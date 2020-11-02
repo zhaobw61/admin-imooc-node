@@ -1,6 +1,7 @@
 const {
     MEME_TYPE_EPUB,
     UPLOAD_PATH,
+    OLD_UPLOAD_URL,
     UPLOAD_URL
 } = require('../utils/constant');
 
@@ -301,6 +302,31 @@ class Book {
             return fs.existsSync(path);
         } else {
             return fs.existsSync(Book.genPath(path));
+        }
+    }
+
+    static genCoverUrl(book) {
+        const { cover } = book;
+        if(+book.updateType === 0) {
+            if(cover) {
+                if(cover.startsWith('/')) {
+                    return `${OLD_UPLOAD_URL}${cover}`;
+                } else {
+                    return `${OLD_UPLOAD_URL}/${cover}`;
+                }
+            } else {
+                return null;
+            }
+        } else {
+            if(cover) {
+                if(cover.startsWith('/')) {
+                    return `${UPLOAD_URL}${cover}`;
+                } else {
+                    return `${UPLOAD_URL}/${cover}`;
+                }
+            } else {
+                return null;
+            }
         }
     }
 }

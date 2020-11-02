@@ -31,7 +31,6 @@ router.post(
 router.post(
     '/create',
     function(req, res, next){
-        console.log('-0-0-0-');
         const decoded = decode(req);
         if(decoded && decoded.username) {
             req.body.username = decoded.username;
@@ -44,5 +43,18 @@ router.post(
         })
     }
 )
+
+router.get('/get', function(req, res, next){
+    const { fileName } = req.query;
+    if(!fileName) {
+        next(boom.badRequest(new Error('fileName参数不为空')));
+    } else {
+        bookService.getBook(fileName).then(book => {
+            new Result(book, '获取图书信息成功').success(res);
+        }).catch(err => {
+            next(boom.badImplementation(err));
+        })
+    }
+})
 
 module.exports = router;
