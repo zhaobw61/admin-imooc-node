@@ -221,7 +221,7 @@ class Book {
                             newNavMap.forEach((chapter, index) => {
                                 const src = chapter.content['$'].src;
                                 chapter.id = `${src}`;
-                                chapter.href = `${dir}/${src}`.replace(unzipPath, ''); 
+                                chapter.href = `${dir}/${src}`.replace(unzipPath, '');
                                 chapter.text = `${UPLOAD_URL}${dir}/${src}`;
                                 chapter.label = chapter.navLabel.text || '';
                                 chapter.navId = chapter['$'].id;
@@ -229,16 +229,7 @@ class Book {
                                 chapter.order = index + 1;
                                 chapters.push(chapter);
                             });
-                            const chapterTree = [];
-                            chapters.forEach(c => {
-                                c.children = [];
-                                if(c.pid) {
-                                    chapterTree.push(c);
-                                } else {
-                                    const parent = chapters.find ( _ => _.navId === c.pid);
-                                    parent && parent.children.push(c);
-                                }
-                            })
+                            const chapterTree = Book.genContentsTree(contents);
                             reslove({ chapters, chapterTree });
                         } else {
                             reject(new Error('目录解析失败，目录数为0'));
@@ -327,6 +318,22 @@ class Book {
             } else {
                 return null;
             }
+        }
+    }
+
+    static genContentsTree(contents) {
+        if(contents) {
+            const contentsTree = [];
+            contents.forEach(c => {
+                c.children = [];
+                if(c.pid) {
+                    contentsTree.push(c);
+                } else {
+                    const parent = contents.find( _ => _.navId === c.pid);
+                    parent.children.push(c);
+                }
+            })
+            return contentsTree;
         }
     }
 }

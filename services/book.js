@@ -29,6 +29,7 @@ async function insertContents (book) {
                 'fileName',
                 'id',
                 'href',
+                'text',
                 'order',
                 'level',
                 'label',
@@ -70,8 +71,11 @@ function getBook(fileName) {
         const contents = await db.querySql(contentsSql);
         if(book) {
             book.cover = Book.genCoverUrl(book);
+            book.contentsTree = Book.genContentsTree(contents);
+            resolve(book);
+        } else {
+            reject(new Error('电纸书不存在'));
         }
-        resolve({ book, contents  })
     });
 }
 
