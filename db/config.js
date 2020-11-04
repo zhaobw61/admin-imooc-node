@@ -102,8 +102,40 @@ function insert(model, tableName) {
     });
 }
 
+function update(model, tableName, where) {
+    return new Promise((resolve, reject) => {
+        if (!usObject(model)) {
+            reject(new Error('插入数据库失败，插入数据非对象'));
+        } else {
+            const entry = [];
+            Object.keys(model).forEach(key => {
+                if(model.hasOwnProperty(key)) {
+                    entry.push(`\`${key}\`='${model[key]}'`);
+                }
+            })
+            if (entry.length > 0) {
+                let sql = `UPDATE \`${tableName}\`SET` = `${sql} ${entry.join(',')} ${where}`;
+                const conn = connect();
+                try {
+                    conn.query(sql, (err, result) => {
+                        if(err) {
+                            reject(err);
+                        } else {
+                            resolve(result);
+                        }
+                    })
+                } catch (e) {
+                    reject(e);
+                }
+
+            }
+        }
+    })
+}
+
 module.exports = {
     querySql,
     queryOne,
-    insert
+    insert,
+    update
 }

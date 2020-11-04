@@ -63,6 +63,29 @@ function insertBook(book) {
     })
 }
 
+function updateBook(book) {
+    return new Promise(async (reslove, reject) => {
+        try {
+            if (book instanceof Book) {
+                const result = await getBook(book.fileName);
+                if (result) {
+                    const model = book.toDb();
+                    if(+result.updateType == 0) {
+                        reject(new Error('内置图书不能编辑'));
+                    } else {
+                        await db.update(model, 'book', `where fileName='${book.fileName}'`);
+                        reslove();
+                    }
+                }
+            } else {
+                reject(new Error('添加的图书对象不合法'));
+            }
+        } catch (e) {
+
+        }
+    })
+}
+
 function getBook(fileName) {
     return new Promise(async (resolve, reject) => {
         const bookSql = `select * from book where fileName='${fileName}'`;
@@ -81,5 +104,6 @@ function getBook(fileName) {
 
 module.exports = {
     insertBook,
+    updateBook,
     getBook
 }

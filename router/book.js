@@ -28,6 +28,7 @@ router.post(
         }
     }
 )
+
 router.post(
     '/create',
     function(req, res, next){
@@ -38,6 +39,22 @@ router.post(
         const book  = new Book(null, req.body);
         bookService.insertBook(book).then(()=>{
             new Result('添加电子书成功').success(res);
+        }).catch(err => {
+            next(boom.badImplementation(err));
+        })
+    }
+)
+
+router.post(
+    '/update',
+    function(req, res, next){
+        const decoded = decode(req);
+        if(decoded && decoded.username) {
+            req.body.username = decoded.username;
+        }
+        const book  = new Book(null, req.body);
+        bookService.updateBook(book).then(()=>{
+            new Result('更新电子书成功').success(res);
         }).catch(err => {
             next(boom.badImplementation(err));
         })
