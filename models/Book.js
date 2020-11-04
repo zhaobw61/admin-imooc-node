@@ -229,7 +229,7 @@ class Book {
                                 chapter.order = index + 1;
                                 chapters.push(chapter);
                             });
-                            const chapterTree = Book.genContentsTree(contents);
+                            const chapterTree = Book.genContentsTree(chapters);
                             reslove({ chapters, chapterTree });
                         } else {
                             reject(new Error('目录解析失败，目录数为0'));
