@@ -113,22 +113,22 @@ function update(model, tableName, where) {
                     entry.push(`\`${key}\`='${model[key]}'`);
                 }
             })
-            if (entry.length > 0) {
-                let sql = `UPDATE \`${tableName}\`SET` = `${sql} ${entry.join(',')} ${where}`;
-                const conn = connect();
-                try {
-                    conn.query(sql, (err, result) => {
-                        if(err) {
-                            reject(err);
-                        } else {
-                            resolve(result);
-                        }
-                    })
-                } catch (e) {
-                    reject(e);
-                }
+            // if (entry.length > 0) {
+            //     let sql = `UPDATE \`${tableName}\`SET` = `${sql} ${entry.join(',')} ${where}`;
+            //     const conn = connect();
+            //     try {
+            //         conn.query(sql, (err, result) => {
+            //             if(err) {
+            //                 reject(err);
+            //             } else {
+            //                 resolve(result);
+            //             }
+            //         })
+            //     } catch (e) {
+            //         reject(e);
+            //     }
 
-            }
+            // }
         }
     })
 }
