@@ -106,6 +106,7 @@ async function getCategory() {
     const sql = 'select * from category order by category asc';
     const result = await db.querySql(sql);
     const categoryList = [];
+    console.log(result);
     result.forEach(item => {
         categoryList.push({
             label: item.categoryText,
@@ -116,9 +117,28 @@ async function getCategory() {
     return categoryList;
 }
 
+async function listBook(query) {
+    const {
+        category,
+        author,
+        title
+    } = query;
+    let bookSql = 'select * from book';
+    let where = 'where'
+    if (where !== 'where') {
+        bookSql =  `${bookSql} ${where}`
+    }
+    const list = await db.querySql(bookSql);
+    return { list }
+    // return new Promise((resolve, reject) => {
+    //     resolve();
+    // })
+}
+
 module.exports = {
     insertBook,
     updateBook,
     getBook,
-    getCategory
+    getCategory,
+    listBook
 }
