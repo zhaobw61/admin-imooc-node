@@ -330,7 +330,7 @@ class Book {
                     contentsTree.push(c);
                 } else {
                     const parent = contents.find( _ => _.navId === c.pid);
-                    parent.children.push(c);
+                    parent && parent.children.push(c);
                 }
             })
             return contentsTree;
